@@ -9,11 +9,12 @@
 #include <signal.h>
 #include <sys/select.h>
 
-#define FIFO_NAME "fifo_server"
+#define FIFO_NAME "fifo_server" //Nome della named pipe
 #define FIFO_PERM (O_RDWR | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
 
 int fd_server = -1;
 
+//Metodo per intercettare il signal sigterm
 void
 sigtermhandler(int unused) {
     printf("\nSignal received\n");
