@@ -11,7 +11,7 @@
 
 int
 main(int argc, char **argv) {
-    int port;
+    int porta;
     int protocol;
     char buf[80];
     char ipcli[80];
@@ -24,8 +24,8 @@ main(int argc, char **argv) {
     gets(ipcli); //reads a line from stdin and stores it into the string pointed to by str
     printf("Port to wait for calls: ");
     gets(buf); //reads a line from stdin and stores it into the string pointed to by str
-    port = atoi(buf); //Converte da string a intero
-    if (port < 1024 || port > 65535) {
+    porta = atoi(buf); //Converte da string a intero
+    if (porta < 1024 || porta > 65535) {
         printf("Port number out of range\n");
         exit(1);
     }
@@ -35,7 +35,7 @@ main(int argc, char **argv) {
  *  Questo perchè altrimenti trovo dei valori casuali al suo interno, meglio sapere cosa aspettarsi, più che altro se dovessi
  *  lavorare con dei puntatori si rischia di andare a puntare dei valori fuori dalla memoria che portano a crash*/
     cli.sin_family = AF_INET; //In pratica ipv4
-    cli.sin_port = htons((u_short) port);    /* Assure the big endianity! perchè nella struttura devono essere memorizzati
+    cli.sin_port = htons((u_short) porta);    /* Assure the big endianity! perchè nella struttura devono essere memorizzati
  * in questo formato*/
 
     if ((cli.sin_addr.s_addr = inet_addr(ipcli)) ==
