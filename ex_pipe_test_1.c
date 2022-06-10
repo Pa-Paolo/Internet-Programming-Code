@@ -11,6 +11,11 @@ main(int argc, char **argv) {
 
     printf("Example 1 of pipes\n");
     fflush(stdout);
+    /*
+     * For  output streams, fflush() forces a write of all user-space buffered
+     * data for the given output or update stream via the stream's  underlying
+     * write function.
+     */
 
     //Requesting the pipe, if an error occurs the program exit
     if (pipe(pfd) == -1) {
@@ -29,4 +34,10 @@ main(int argc, char **argv) {
     if (nread > 0)
         printf("Buffer content: %s", buf);
     exit(0);
+
+    /*
+     * Non ha molto senso che un programma scriva e poi legga da una pipe perchè lo potrebbe fare attraverso la propria
+     * memoria senza chiedere una pipe al kernel. Il caso normale è quando ci sono due programmi che leggono e scrivono
+     * sulla pipe.
+     */
 }
