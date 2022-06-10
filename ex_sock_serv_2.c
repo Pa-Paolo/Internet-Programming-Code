@@ -20,6 +20,7 @@ do_quit(int unused) //Signal handler che è chiamato quando chiamiamo per esempi
 }
 
 #ifdef ALTERNATIVE_SERVER
+//Normalmente non viene eseguita questa parte la quella dopo l'ELSE
 void
 do_server(int s, struct sockaddr_in cli, int n)
 {
@@ -53,9 +54,10 @@ do_server(int s, struct sockaddr_in cli, int n) {
     char buf[100];
 
     printf("Server launched pid=%d\n", getpid());
-    port = ntohs(cli.sin_port); //Per convertire il BIG ENDIAN in quello specifico della macchina nella quale lavoro.
-    printf("Client is %s on port %d\n", inet_ntoa(cli.sin_addr),
-           port); //inet_ntoa=ritorna la notazione puntata dell'indirizzo in BIG ENDIAN
+    //Per convertire il BIG ENDIAN in quello specifico della macchina nella quale lavoro.
+    port = ntohs(cli.sin_port);
+    //inet_ntoa -> ritorna la notazione puntata dell'indirizzo in BIG ENDIAN
+    printf("Client is %s on port %d\n", inet_ntoa(cli.sin_addr),port);
 
     while (1) {
         if ((len = read(s, buf, sizeof(buf))) <= 0)
@@ -103,15 +105,16 @@ main(int argc, char **argv) {
         exit(1);
     }
 
-    if (bind(s, (struct sockaddr *) &sin, sizeof(sin)) <
-        0) { //Il secondo argomento è l'indirizzo alla quale voglio connettermi (Passo il puntatore alla struttura by referance)
+    if (bind(s, (struct sockaddr *) &sin, sizeof(sin)) <0) {
+        //Il secondo argomento è l'indirizzo alla quale voglio connettermi (Passo il puntatore alla struttura per riferimento)
         printf("Can't bind the port no. %d\n", port);
         close(s);
         exit(1);
     }
-    if (listen(s, 1) < 0) { //Creo una coda alla quale il tcp ascolta, e la lunghezza della della coda
+    if (listen(s, 1) < 0) { //Creo una coda alla quale il tcp ascolta, e la lunghezza della coda la fisso a 1.
         printf("Can't listen\n");
         close(s);
+        //Non sono riuscito a fare la listen quindi esco e chiudo il socket
         exit(1);
     }
 
