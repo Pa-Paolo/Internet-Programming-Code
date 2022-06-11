@@ -10,7 +10,9 @@ main(int argc, char **argv) {
     char buf[100];
 
     printf("Example 1 of pipes\n");
-    fflush(stdout);
+    fflush(stdout); //Forzo la stampa su terminale perchè altrimenti potrebbe non stamparla subito, ma per esempio,
+    //Alla fine dell'eseguzione.
+
     /*
      * For  output streams, fflush() forces a write of all user-space buffered
      * data for the given output or update stream via the stream's  underlying

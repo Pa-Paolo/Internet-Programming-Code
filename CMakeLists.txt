@@ -3,7 +3,8 @@ project(Esempi_Lezione)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Esempi_Lezione main.cpp)
+add_executable(Es_signal esercizi/signals.c)
+add_executable(Es_signal_Sender esercizi/signal_sender.c)
 add_executable(Fifo_Test1 ex_fifo_test_1.c)
 add_executable(Fifo_Test4 ex_fifo_test_4.c)
 add_executable(Signal_Test ex_signal_test.c)
