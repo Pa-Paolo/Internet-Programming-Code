@@ -135,7 +135,7 @@ main(int argc, char **argv) {
          * alle richieste. Ogni accept che avviene passo di qua e creo un processo figlio che serve la richiesta, il parent
          * non entra dentro l'IF e quindi non chiama il metodo do_server().
          */
-        if (fork() ==0) {
+        if (fork()==0) {
             //Il child e solo il child (0) chiude il socket, il numero di child dipende dai client connected, se ho 5 client connessi
             //allora avrò 5 children plus the parent (6 processi)
             close(s);
@@ -148,7 +148,8 @@ main(int argc, char **argv) {
         close(cs);
     }
 
-    sleep(1)
+    close(s);
+    sleep(1);
     do_quit(0);
 }
 

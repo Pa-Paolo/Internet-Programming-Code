@@ -63,18 +63,18 @@ main(int argc, char **argv) {
     tv.tv_usec = 0; //Microsecondi aggiuntivi ai secondi precedenti.
 
     FD_ZERO(&rfds); //rfds = read file descriptor set. Puliamo il read file descriptior set
-    FD_SET(fd_server,
-           &rfds); //Includo il file descriptor del PIPE e lo includo nel file descriptor set in modo da monitorarlo.
-    // Da ora in poi monitoro il PIPE
-    FD_SET(STDIN_FILENO, &rfds); //Standard input file descriptor. Lo includo nel file descriptor set.
+    FD_SET(fd_server, &rfds); //Includo il file descriptor del named PIPE nel file descriptor set in modo da monitorarlo.
+    FD_SET(STDIN_FILENO, &rfds); //Standard input file descriptor. Lo includo nel file descriptor set che poi vado a monitorare
+    // con la select.
     rfds_save = rfds; //Salvo il file descriptor set in una variabile aggiuntiva.
 
-    //Metto dieci perchè diciamo che è sufficiente in questo caso un massimo di 10 file descriptor.
-    //Il time out permette di ritornare ogni 5 secondi. La e commerciale serve perchè per le strutture voglio passare il puntatore
+    //Metto dieci perché diciamo che è sufficiente in questo caso un massimo di 10 file descriptor.
+    //Il time out permette di ritornare ogni 5 secondi. La e commerciale serve perché per le strutture voglio passare il puntatore
     //in modo da non copiare la struttura così risparmio risorse.
-    //ATTENZIONE LA SELECT VA A MODIFICARE IL SET E RIMANGONO SOLO I FD CHE SONO PRONTI AD ESSERE LETTI QUINDI
-    //POI MI BASTA CONTROLLARE CON FD_ISSET SE E' PRESENTE NEL SET. SE E' PRESENTE NEL SET ALLORA E' STATO MODIFICATO
-    //IL CONTENUTO PUNTATO DAL FILE DESCRIPTOR.
+    //ATTENZIONE LA SELECT VA A MODIFICARE IL SET E RIMANGONO SOLO I FILE DESC CHE SONO PRONTI A ESSERE LETTI QUINDI (in pratica
+    //che sono stati modificati):
+    //POI MI BASTA CONTROLLARE CON FD_ISSET SE E' PRESENTE QUALCOSA NEL SET (ALLORA E' STATO MODIFICATO
+    //IL CONTENUTO PUNTATO DAL FILE DESCRIPTOR).
     while ((retval = select(10, &rfds, NULL, NULL, &tv)) >= 0) {
         if (retval == 0) {
             printf("Timeout expired\n");
@@ -86,7 +86,7 @@ main(int argc, char **argv) {
             //Questa funzione mi permette di sapere se è successo qualcosa nella FIFO.
             //FD_ISSET controlla che effettivamente ci sia ancora il FD di cui siamo interessati
             if (FD_ISSET(fd_server, &rfds)) {
-                //Se è presente allora leggo il contenuto,
+                //Se il file descriptor della NAMED PIPE aperta prima allora leggo il contenuto
                 nread = read(fd_server, rxbuf, sizeof(rxbuf));
                 if (nread == 0) {
                     printf("Read an EOF\n");
@@ -109,7 +109,7 @@ main(int argc, char **argv) {
                 }
             }
             if (FD_ISSET(STDIN_FILENO, &rfds)) {
-                //Qualcosa è successo nella keyboard
+                //Se il file descriptor dello STANDARD INPUT aperta prima allora leggo il contenuto
                 nread = read(STDIN_FILENO, rxbuf, sizeof(rxbuf));
                 if (nread == 0) {
                     printf("Read an EOF\n");
@@ -124,7 +124,9 @@ main(int argc, char **argv) {
                 }
             }
         }
-        rfds = rfds_save;
+        rfds = rfds_save;  //Devo ripristinare il file descriptor set con quelli da monitorare perché la select ha lasciato
+        //nel file descriptor set (rfds) solamente quelli che sono pronti da leggere oppure nel caso di timeout in teoria è
+        //vuoto.
     }
 
     if (retval < 0)

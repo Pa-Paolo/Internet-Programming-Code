@@ -51,7 +51,7 @@ int retval;
         tv.tv_usec = 0;
 
 	FD_ZERO(&rfds);
-        FD_SET(fd_server, &rfds);
+    FD_SET(fd_server, &rfds);
 
 	while((retval = select(10, &rfds, NULL, NULL, &tv)) >= 0) {
 		if(retval == 0) {

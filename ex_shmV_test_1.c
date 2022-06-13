@@ -9,8 +9,7 @@
 #define SHMPATH        "./shmpath"
 #define PERM_FILE       (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 
-int *
-getshmaddr(void) {
+int *getshmaddr(void) {
     key_t key;
     int shmid, *p;
 
