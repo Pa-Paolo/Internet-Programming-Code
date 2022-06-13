@@ -61,7 +61,7 @@ main(int argc, char **argv) {
             sem_wait(csemR); //Non vado a leggere il valore di *p finchè il semaforo non è libero. Se qualcuno sta usando la
             //zona di memoria allora sem_wait aspetta finchè il valore di semaforo non viene incrementato e poi lo decrementa lui
             //siccome prende accesso alla zona di memoria.
-            n = *p;
+            n = *p;add_executable(Es_socket2 esercizi/socket_server_2.c)
             sem_post(csemW); //Sem post aumenta il valore del semaforo rendendo libero l'accesso a un eventuale processo che sta aspettando
             //per poter accedere/scrivere la memoria. Una volta che copio il valore in "n" allora non mi importa se qualcun altro la leggerà o
             //modificherà siccome io ho già preso il valore che mi interessava.

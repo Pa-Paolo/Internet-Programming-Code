@@ -26,7 +26,8 @@ main(int argc, char **argv) {
     gets(buf); //reads a line from stdin and stores it into the string pointed to by str
     porta = atoi(buf); //Converte da string a intero
     if (porta < 1024 || porta > 65535) {
-        printf("Port number out of range\n");
+        printf("Port number out of range\n");perror("Error opening socket");
+            exit(-1);
         exit(1);
     }
 
@@ -71,7 +72,7 @@ main(int argc, char **argv) {
     }
 
     /* now the server is connected */
-    //Leggo e rimando quello che leggo. (Finchè il fd non viene chiuso?)
+    //Leggo quello che è nel fd è lo metto nel buffer poi lo mando, finchè non arrivo alla fine o fd non viene chiuso.
     while ((n = read(fd, buf, sizeof(buf))) > 0) {
         write(s, buf, n);
     }
