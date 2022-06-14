@@ -44,6 +44,9 @@ int main() {
         if((socket_accept_fd = accept(socketfd, (struct sockaddr *) &sockaddrInClient, (unsigned *) &client_addr_dimen)) >= 0) {
             int nread;
             char buf[120];
+
+            char *ipclient = inet_ntoa(sockaddrInClient.sin_addr);
+            printf("Client connected: %s\n",ipclient);
             while ((nread = read(socket_accept_fd, buf, sizeof(buf))) > 0) {
                 write(STDOUT_FILENO, buf, nread);
             }
